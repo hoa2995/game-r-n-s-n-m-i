@@ -2,19 +2,43 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const box = 20;
-let snake = [];
-snake[0] = { x: 9 * box, y: 10 * box };
-
-let food = {
-    x: Math.floor(Math.random() * 19 + 1) * box,
-    y: Math.floor(Math.random() * 19 + 1) * box
-};
-
-let score = 0;
+let snake;
+let food;
+let score;
 let d;
+let game;
+let gameSpeed = 100; // Tốc độ mặc định của rắn
 
-document.addEventListener('keydown', direction);
+const speedSlider = document.getElementById('speedSlider');
+const speedValue = document.getElementById('speedValue');
 
+// Cập nhật tốc độ khi người dùng thay đổi thanh trượt
+speedSlider.addEventListener('input', function() {
+    gameSpeed = speedSlider.value;
+    speedValue.textContent = gameSpeed + 'ms';
+    restartGame();
+});
+
+// Khởi tạo trò chơi
+function initGame() {
+    snake = [];
+    snake[0] = { x: 9 * box, y: 10 * box };
+    food = {
+        x: Math.floor(Math.random() * 19 + 1) * box,
+        y: Math.floor(Math.random() * 19 + 1) * box
+    };
+    score = 0;
+    d = '';
+    restartGame(); // Chạy trò chơi với tốc độ mới
+}
+
+// Khởi động lại trò chơi với tốc độ mới
+function restartGame() {
+    clearInterval(game); // Dừng trò chơi hiện tại
+    game = setInterval(draw, gameSpeed); // Khởi động trò chơi với tốc độ mới
+}
+
+// Xử lý sự kiện di chuyển
 function direction(event) {
     if (event.keyCode == 37 && d != 'RIGHT') {
         d = 'LEFT';
@@ -27,6 +51,7 @@ function direction(event) {
     }
 }
 
+// Kiểm tra va chạm
 function collision(newHead, snake) {
     for (let i = 0; i < snake.length; i++) {
         if (newHead.x == snake[i].x && newHead.y == snake[i].y) {
@@ -36,6 +61,7 @@ function collision(newHead, snake) {
     return false;
 }
 
+// Vẽ trò chơi
 function draw() {
     ctx.fillStyle = '#f0f0f0';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -84,4 +110,28 @@ function draw() {
     ctx.fillText(score, 2 * box, 1.6 * box);
 }
 
-let game = setInterval(draw, 100);
+// Xử lý sự kiện nhấn nút di chuyển
+document.getElementById('upButton').addEventListener('click', function() {
+    if (d != 'DOWN') d = 'UP';
+});
+
+document.getElementById('leftButton').addEventListener('click', function() {
+    if (d != 'RIGHT') d = 'LEFT';
+});
+
+document.getElementById('downButton').addEventListener('click', function() {
+    if (d != 'UP') d = 'DOWN';
+});
+
+document.getElementById('rightButton').addEventListener('click', function() {
+    if (d != 'LEFT') d = 'RIGHT';
+});
+
+// Xử lý sự kiện nhấn nút Reset
+document.getElementById('resetButton').addEventListener('click', initGame);
+
+// Xử lý sự kiện nhấn phím
+document.addEventListener('keydown', direction);
+
+// Khởi động trò chơi lần đầu
+initGame();

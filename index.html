@@ -8,6 +8,26 @@
 </head>
 <body>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <!-- Các nút di chuyển -->
+    <div class="controls">
+        <button id="upButton">Up</button>
+        <div>
+            <button id="leftButton">Left</button>
+            <button id="downButton">Down</button>
+            <button id="rightButton">Right</button>
+        </div>
+    </div>
+
+    <!-- Thanh trượt để chỉnh tốc độ -->
+    <div class="speed-control">
+        <label for="speedSlider">Speed: </label>
+        <input type="range" id="speedSlider" min="50" max="300" value="100" step="10">
+        <span id="speedValue">100ms</span>
+    </div>
+    
+    <button id="resetButton">Reset</button>
+
     <script src="script.js"></script>
 </body>
 </html>
